@@ -1,26 +1,1507 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Minimal CV layout. One family (DM Sans), one accent (blue), a narrow
+ * reading column, and hierarchy carried by type size and weight rather than
+ * by colour, borders or decoration.
+ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --breakpoint-xs: 25rem;
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
 }
 
+:root {
+  --paper: #ffffff;
+  /* Cards sit on this. It used to be #ffffff — identical to --paper — which
+     meant every card background was a no-op and the grid read as loose text
+     rather than cards. */
+  --surface: #f7f8fa;
+
+  /* Contrast measured against --surface (#f7f8fa), the darker of the two
+     grounds and therefore the worst case. */
+  --ink: #101114; /* 17.8:1 - headlines and body */
+  --ink-2: #55575e; /* 6.8:1  - secondary copy */
+  --ink-3: #6e7178; /* 4.6:1  - meta labels, smallest text */
+
+  --line: #e0e1e6;
+  --line-strong: #cdcfd6;
+
+  /* The single accent. Blue only — nothing else tints anything. */
+  --accent: #2c35c6;
+  --accent-soft: #eef0fd;
+
+  /* Hero. Tokenised rather than hardcoded because the hero had no dark
+     treatment at all and stayed a bright block on an otherwise dark page. */
+  --hero-bg: #fbfcfe;
+  --hero-ink: #2c35c6;
+  --hero-ink-2: #3a43b8;
+  --hero-ink-3: rgba(44, 53, 198, 0.6);
+  --hero-edge: rgba(44, 53, 198, 0.25);
+  --hero-solid-ink: #ffffff;
+  --hero-solid-hover: #1f2799;
+  /* Display-text glow. Taken from this theme's hero gradient stops so the
+     contact heading is tinted by the same palette as the top of the page. */
+  --display-glow-1: #2f3ed4;
+  --display-glow-2: #7d8bea;
+  --hero-gradient: radial-gradient(
+    105% 125% at 96% 62%,
+    #2f3ed4 0%,
+    #4453e0 14%,
+    #7d8bea 32%,
+    #b3bdf2 50%,
+    #d7ddf8 68%,
+    #eef1fc 84%,
+    #fbfcfe 100%
+  );
+
+  /* Translucent pill fill. The nav is fixed, so it crosses the hero and then
+     the page body — one token has to read on both grounds in a given theme. */
+  --chip: rgba(255, 255, 255, 0.55);
+  --chip-hover: rgba(255, 255, 255, 0.9);
+
+  /* Overlay blending is far more visible on a dark ground at equal opacity. */
+  --grain-opacity: 0.5;
+
+  /* The page signature. Defined once; the hero, the footer and the project
+     cards all draw from it. */
+  --grain-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)'/%3E%3C/svg%3E");
+
+  /* Type scale. The old scale had no midrange — hero 80px, section title 17px,
+     body 15px — so everything below the hero read at one level of importance. */
+  --step-display: clamp(2.75rem, 7vw, 5.5rem);
+  --step-2: clamp(1.75rem, 3.5vw, 2.75rem);
+  --step-1: 1.25rem;
+  --step-0: 1rem;
+  --step--1: 0.875rem;
+  --step--2: 0.6875rem;
+
+  /* One content width for the whole page, hero included.
+     Varying it per section (69rem here, 84rem there) put a different left edge
+     under every heading, which reads as broken alignment rather than rhythm.
+     Rhythm comes from vertical padding and internal density instead — the
+     vertical spine never moves. */
+  --shell: 84rem; /* ~1344px content column */
+  --shell-read: 52rem; /* case study prose only, on its own route */
+  --gutter: clamp(1.25rem, 5vw, 2.5rem);
+  --label-col: 8rem;
+
+  /* These were 7.5rem / 4.5rem. At 1920 that put ~240px of void at every
+     boundary, which with no imagery left the page reading empty rather than
+     spacious. Density is what makes an imageless layout hold. */
+  --pad-lg: clamp(2.75rem, 5vw, 4.25rem);
+  --pad-md: clamp(2rem, 3.5vw, 3rem);
+}
+
+/* Dark palette. Same roles, same single accent. Ratios measured against
+   --surface (#14161d) — the card ground, and so the worst case, matching the
+   convention used for the light block. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    --paper: #0a0b0f;
+    --surface: #14161d;
+
+    --ink: #e8e9ed; /* 14.9:1 - headlines and body */
+    --ink-2: #9fa2ad; /* 7.1:1  - secondary copy */
+    --ink-3: #7d808a; /* 4.6:1  - meta labels, smallest text */
+
+    --line: #1e2029;
+    --line-strong: #2b2e3a;
+
+    /* #2c35c6 is 1.9:1 on this ground and fails. Lifted. */
+    --accent: #7c86ff; /* 5.8:1 */
+    --accent-soft: #191d3d;
+    /* Hero, dark. Same gradient geometry, inverted range: saturated indigo at
+       the focal point falling to the page ground, so the hero stops being a
+       bright slab at the top of a dark page. */
+    --hero-bg: #0a0b0f;
+    --hero-ink: #e4e7ff; /* 16.1:1 on the gradient's dark end, 11.7:1 mid */
+    --hero-ink-2: #b3b9ee; /* 10.4:1 */
+    --hero-ink-3: rgba(228, 231, 255, 0.55);
+    --hero-edge: rgba(228, 231, 255, 0.22);
+    --hero-solid-ink: #0f1130;
+    --hero-solid-hover: #ffffff;
+    --display-glow-1: #4a59ee;
+    --display-glow-2: #2c3596;
+    --hero-gradient: radial-gradient(
+      105% 125% at 96% 62%,
+      #4a59ee 0%,
+      #3d4ad2 14%,
+      #2c3596 32%,
+      #1d2361 50%,
+      #141733 68%,
+      #0d0f1c 84%,
+      #0a0b0f 100%
+    );
+
+    --chip: rgba(255, 255, 255, 0.1);
+    --chip-hover: rgba(255, 255, 255, 0.2);
+    --grain-opacity: 0.22;
+
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Explicit choice wins over the system setting in both directions. */
+:root[data-theme="dark"] {
+  --paper: #0a0b0f;
+  --surface: #14161d;
+
+  --ink: #e8e9ed; /* 14.9:1 */
+  --ink-2: #9fa2ad; /* 7.1:1 */
+  --ink-3: #7d808a; /* 4.6:1 */
+
+  --line: #1e2029;
+  --line-strong: #2b2e3a;
+
+  --accent: #7c86ff; /* 5.8:1 */
+  --accent-soft: #191d3d;
+  /* Hero, dark. Same gradient geometry, inverted range: saturated indigo at
+     the focal point falling to the page ground, so the hero stops being a
+     bright slab at the top of a dark page. */
+  --hero-bg: #0a0b0f;
+  --hero-ink: #e4e7ff; /* 16.1:1 on the gradient's dark end, 11.7:1 mid */
+  --hero-ink-2: #b3b9ee; /* 10.4:1 */
+  --hero-ink-3: rgba(228, 231, 255, 0.55);
+  --hero-edge: rgba(228, 231, 255, 0.22);
+  --hero-solid-ink: #0f1130;
+  --hero-solid-hover: #ffffff;
+  --display-glow-1: #4a59ee;
+  --display-glow-2: #2c3596;
+  --hero-gradient: radial-gradient(
+    105% 125% at 96% 62%,
+    #4a59ee 0%,
+    #3d4ad2 14%,
+    #2c3596 32%,
+    #1d2361 50%,
+    #141733 68%,
+    #0d0f1c 84%,
+    #0a0b0f 100%
+  );
+
+  --chip: rgba(255, 255, 255, 0.1);
+  --chip-hover: rgba(255, 255, 255, 0.2);
+  --grain-opacity: 0.22;
+
 }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  font-synthesis-weight: none;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* One continuous surface — no card, no edges. Sections centre themselves. */
+#main {
+  width: 100%;
+}
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Layout primitives ------------------------------------------------------- */
+
+.label {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Skip link --------------------------------------------------------------- */
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  transform: translateY(-250%);
+  transition: transform 0.18s ease;
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.7rem 1.15rem;
+  border-radius: 999px;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* Section frame ----------------------------------------------------------- */
+
+/* The gradient used to dead-end at the hero and never return. A trace of it
+   sits on each section boundary and comes back at full strength in the footer,
+   so the page reads as one object.
+
+   `border-top` is dropped rather than kept: the gradient occupies the same 1px
+   and stacking both gives a muddy double rule. */
+.section {
+  position: relative;
+  padding-block: var(--pad-md);
+}
+
+.section::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--accent) 30%,
+    var(--accent) 70%,
+    transparent 100%
+  );
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+/* The sections that should dominate the page get more air than the ones that
+   support them. Every section being identical is what made this read as a
+   document rather than a product. */
+.section--pad-lg {
+  padding-block: var(--pad-lg);
+}
+
+/* The label used to occupy an 8rem left column, which pushed every section
+   title ~160px right of where its own content started and left the heading
+   reading off-balance. It is an eyebrow now — directly above the thing it
+   labels. */
+.section__grid {
+  display: block;
+}
+
+.section__grid > .label {
+  display: block;
+  margin-bottom: 0.55rem;
+}
+
+.section__title {
+  font-size: var(--step-2);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+.section__intro {
+  margin-top: 0.6rem;
+  font-size: var(--step--1);
+  color: var(--ink-2);
+  max-width: 44rem;
+}
+
+.section__body {
+  margin-top: 1.25rem;
+}
+
+/* Work -------------------------------------------------------------------- */
+
+.work__grid {
+  display: grid;
+  gap: 0.9rem;
+}
+
+@media (min-width: 48rem) {
+  .work__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Mobile carousel ---------------------------------------------------------
+ * The track is a scroll-snap container, so swiping is the browser's own
+ * scrolling — real momentum, no touch handlers. The arrows only move that same
+ * scroll position, so the two inputs cannot disagree.
+ *
+ * Everything is scoped to `--active`, applied at runtime below 48rem only, so
+ * the desktop grid and the no-JS list are both untouched.
+ */
+
+.work__carousel-nav {
+  display: none;
+}
+
+@media (max-width: 47.99rem) {
+  .work__carousel--active .work__grid {
+    display: flex;
+    gap: 0.9rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    /* Bleed to the screen edges so a swiped card can leave cleanly, while the
+       first card still lines up with the page spine. */
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+
+  .work__carousel--active .work__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .work__carousel--active .work__grid > li {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+  }
+
+  .work__carousel--active .work__carousel-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.15rem;
+  }
+}
+
+.work__carousel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--accent);
+  transition:
+    border-color 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.work__carousel-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.work__carousel-btn:disabled {
+  opacity: 0.32;
+  cursor: default;
+}
+
+.work__carousel-count {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: var(--step--2);
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  min-width: 3.75rem;
+  text-align: center;
+}
+
+/* Visually hidden, still read aloud — carries "of" into the counter so it is
+   announced as a position rather than two loose numbers. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.work__card {
+  position: relative;
+  /* Contains the hover wash's blend mode so it cannot reach the page ground. */
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 1.15rem 1.25rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: var(--surface);
+  overflow: hidden;
+  transition:
+    border-color 0.28s ease,
+    transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Everything the card actually says rides above the wash. Without this the
+   absolutely-positioned ::after would paint over the static text. */
+.work__card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* The hero's texture, borrowed. A radial tinted with the card's own accent,
+   blended through the same fractal noise, fading in on hover.
+   Intensity is carried by `opacity` rather than a translucent colour so the
+   accent can stay a plain hex — no color-mix(), which Firefox only gained at
+   113 and this project's browserslist allows from 111. */
+.work__card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background-image:
+    var(--grain-image),
+    radial-gradient(
+      130% 150% at 88% -12%,
+      var(--card-accent, var(--accent)) 0%,
+      transparent 58%
+    );
+  background-blend-mode: overlay;
+  transition: opacity 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.work__card:hover::after {
+  opacity: 0.22;
+}
+
+/* The accent hairline. `accent` has been in the project data since the old
+   carousel and has had no consumer since it was removed. */
+.work__card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: 2; /* stays crisp above the hover wash */
+  width: 2px;
+  background: var(--card-accent, var(--accent));
+  opacity: 0.55;
+  transition: opacity 0.28s ease;
+}
+
+.work__card:hover {
+  border-color: var(--line-strong);
+  transform: translateY(-2px);
+}
+
+.work__card:hover::before {
+  opacity: 1;
+}
+
+.work__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.work__index {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: var(--step--2);
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+}
+
+/* The signal slot. Same position, same treatment, every card — whether it
+   holds a measured number or a technical fact. */
+.work__signal {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: var(--step--2);
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.work__name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+/* Real logos and fallback glyphs share one tile so a mixed grid still reads as
+   a set. Fixed square box with object-fit, because not every mark is square —
+   sellflow's is 236x222 and would stretch otherwise. */
+.work__icon,
+.work__logo {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.35rem;
+}
+
+.work__logo {
+  padding: 2px;
+  object-fit: contain;
+  /* A constant light ground under every mark. Several of these are dark or
+     transparent PNGs that would disappear against the dark theme's card. */
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+/* Glyph takes the card's own accent, so the cards without a real logo still
+   read as distinct from one another. */
+.work__icon {
+  padding: 2px;
+  color: var(--card-accent, var(--accent));
+  background: var(--paper);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+/* Stretch the title's link across the whole card. */
+.work__name a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* Clamped so one long summary cannot leave every other card with a ragged
+   pocket of dead space beneath it. */
+.work__summary {
+  font-size: var(--step--1);
+  line-height: 1.45;
+  color: var(--ink-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.work__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  margin-top: auto;
+  padding-top: 0.8rem;
+}
+
+/* Every destination a card has, listed plainly on its own bottom row. Sits
+   above the title's stretched overlay so each link stays individually
+   clickable on case-study cards, where the overlay does exist. */
+.work__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.9rem;
+  margin-top: 0.55rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--line);
+  position: relative;
+  z-index: 1;
+}
+
+.work__links a {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: var(--step--2);
+  letter-spacing: 0.03em;
+  color: var(--accent);
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+.work__links a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Tags -------------------------------------------------------------------- */
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.tag {
+  font-family: var(--font-code), ui-monospace, monospace;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 0.4rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--ink-2);
+  background: var(--surface);
+}
+
+/* Stack ------------------------------------------------------------------- */
+
+.stack__group {
+  display: grid;
+  gap: 0.3rem 1.5rem;
+  padding-block: 1.05rem;
+  border-top: 1px solid var(--line);
+}
+
+.stack__group:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+@media (min-width: 48rem) {
+  .stack__group {
+    grid-template-columns: 3rem minmax(0, 1fr);
+  }
+}
+
+.stack__index {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: var(--step--2);
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  padding-top: 0.35rem;
+}
+
+.stack__group-name {
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+/* Experience timeline ----------------------------------------------------- */
+
+.timeline {
+  position: relative;
+  padding-left: 1.25rem;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 1px;
+  background: var(--line-strong);
+}
+
+.timeline__item {
+  position: relative;
+  padding-bottom: 1.75rem;
+}
+
+.timeline__item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline__item::before {
+  content: "";
+  position: absolute;
+  left: -1.25rem;
+  top: 0.45rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.timeline__role {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.timeline__org {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.timeline__desc {
+  margin-top: 0.35rem;
+  font-size: 0.875rem;
+  color: var(--ink-2);
+}
+
+/* Contact ----------------------------------------------------------------- */
+
+/* Contact display heading -------------------------------------------------
+ * "Open to full-stack" at hero scale, drawn as outline only, with a grained
+ * accent fill that reveals on hover and follows the pointer.
+ *
+ * The words appear twice: once as real text carrying the stroke, once as an
+ * aria-hidden copy carrying the clipped fill. One element cannot fade between
+ * the two treatments without fading its own stroke along with the fill.
+ */
+
+.contact__display {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  font-size: var(--step-display);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--ink-2);
+}
+
+.contact__display-fill {
+  position: absolute;
+  inset: 0;
+  -webkit-text-stroke: 0;
+  color: transparent;
+  background-image:
+    var(--grain-image),
+    radial-gradient(
+      42% 130% at var(--mx, 50%) var(--my, 50%),
+      var(--display-glow-1) 0%,
+      var(--display-glow-2) 46%,
+      transparent 76%
+    );
+  background-blend-mode: overlay;
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+
+/* The soft bloom, behind the glyphs. A negative z-index child paints under its
+   parent's own text, which is what keeps this from washing out the stroke. */
+.contact__display-glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    32% 90% at var(--mx, 50%) var(--my, 50%),
+    var(--display-glow-1) 0%,
+    transparent 62%
+  );
+  filter: blur(34px);
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+
+.contact__display:hover .contact__display-fill {
+  opacity: 1;
+}
+
+.contact__display:hover .contact__display-glow {
+  opacity: 0.5;
+}
+
+/* No hover on touch, so the heading would sit permanently hollow. Fill it. */
+@media (hover: none) {
+  .contact__display-fill {
+    opacity: 1;
+  }
+}
+
+.contact__display-sub {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: var(--step-1);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  color: var(--ink-2);
+}
+
+/* 404 and error boundary -------------------------------------------------- */
+
+.notfound {
+  max-width: var(--shell-read);
+  margin-inline: auto;
+  padding: clamp(4rem, 14vh, 8rem) var(--gutter);
+  min-height: 60vh;
+}
+
+.notfound__title {
+  margin-top: 0.85rem;
+  font-size: var(--step-2);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+.notfound__body {
+  margin-top: 0.75rem;
+  font-size: var(--step--1);
+  color: var(--ink-2);
+  max-width: 46ch;
+}
+
+.notfound__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.75rem;
+}
+
+/* The hero CTAs are tuned for the hero's gradient. Off it they need the page
+   palette instead, or the ghost button vanishes against plain paper. */
+.notfound__links .hero__cta--solid {
+  background: var(--accent);
+  color: #fff;
+}
+
+.notfound__links .hero__cta--ghost {
+  border-color: var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.notfound .label a {
+  color: var(--accent);
+}
+
+.contact__email {
+  display: inline-block;
+  font-size: clamp(1.35rem, 4.5vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  word-break: break-word;
+  transition: color 0.25s ease;
+}
+
+.contact__email:hover {
+  color: var(--accent);
+}
+
+.contact__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.contact__links a {
+  font-size: 0.875rem;
+  color: var(--ink-2);
+  transition: color 0.25s ease;
+}
+
+.contact__links a:hover {
+  color: var(--accent);
+}
+
+/* Footer ------------------------------------------------------------------ */
+
+.footer {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  max-width: var(--shell);
+  margin-inline: auto;
+  border-top: 1px solid var(--line);
+  padding: 1.25rem var(--gutter) 2.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+/* The hero gradient, returning. Closes the page with the same signature it
+   opened on. */
+.footer__gradient {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: radial-gradient(
+    120% 180% at 50% 130%,
+    var(--accent-soft) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Hero -------------------------------------------------------------------- */
+
+.hero {
+  /* Break out of the 1200px sheet to full viewport width without leaving
+     the main landmark. body has overflow-x: hidden, so 100vw is safe. */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+
+  position: relative;
+  isolation: isolate;
+  min-height: clamp(26rem, 82svh, 46rem);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: var(--hero-bg);
+}
+
+.hero__gradient {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: var(--hero-gradient);
+}
+
+/* The grain is the signature: without it the gradient bands visibly. Shared
+   between the hero and the footer so the page opens and closes the same way. */
+.grain {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: overlay;
+  background-image: var(--grain-image);
+  pointer-events: none;
+}
+
+/* The hero is full-bleed, but its copy sits on the same spine as every section
+   below it — otherwise the largest text on the page is the one piece that does
+   not line up with anything. */
+.hero__inner {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-top: clamp(1.25rem, 4vw, 4rem);
+  padding-bottom: clamp(2.5rem, 7vh, 4.5rem);
+}
+
+.hero__eyebrow {
+  font-size: clamp(0.875rem, 1.2vw, 1.0625rem);
+  font-weight: 500;
+  color: var(--hero-ink);
+}
+
+.hero__rule {
+  display: block;
+  width: clamp(3rem, 5vw, 4rem);
+  height: 1.5px;
+  margin: 0.65rem 0 1.25rem;
+  background: var(--hero-ink);
+  opacity: 0.9;
+}
+
+.hero__title {
+  font-weight: 500;
+  /* The display step, so the hero and the section titles come from one scale
+     rather than two unrelated clamps. */
+  font-size: var(--step-display);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  color: var(--hero-ink);
+  text-wrap: balance;
+}
+
+/* Site menu --------------------------------------------------------------- */
+
+.menu-toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+}
+
+.menu-toggle__bar {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition:
+    transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1),
+    background-color 0.3s ease;
+}
+
+.menu-toggle--open .menu-toggle__bar {
+  background: #fff;
+}
+
+.menu-toggle--open .menu-toggle__bar:first-child {
+  transform: translateY(3.5px) rotate(45deg);
+}
+
+.menu-toggle--open .menu-toggle__bar:last-child {
+  transform: translateY(-3.5px) rotate(-45deg);
+}
+
+.menu-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+  /* Inline padding moves to the children so they can sit on the same spine as
+     the rest of the page; the panel's own background stays edge to edge. */
+  padding: clamp(4.5rem, 10vh, 7rem) 0 clamp(2rem, 6vh, 3.5rem);
+  background: var(--accent);
+  color: #fff;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-1rem);
+  transition:
+    opacity 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+    visibility 0.35s;
+}
+
+.menu-panel--open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+/* Both panel blocks ride the shared spine. */
+.menu-panel__nav,
+.menu-panel__foot {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.menu-panel__nav ol {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.25rem, 1.2vh, 0.75rem);
+}
+
+.menu-panel__nav a {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  font-size: clamp(1.75rem, 6vw, 3.5rem);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  color: rgba(255, 255, 255, 0.75);
+  transition: color 0.25s ease;
+}
+
+.menu-panel__nav a:hover,
+.menu-panel__nav a:focus-visible {
+  color: #fff;
+}
+
+.menu-panel__index {
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.menu-panel__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.875rem;
+}
+
+.menu-panel__foot a {
+  color: rgba(255, 255, 255, 0.75);
+  transition: color 0.25s ease;
+}
+
+.menu-panel__foot a:hover {
+  color: #fff;
+}
+
+.menu-panel__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+/* Scroll reveal ------------------------------------------------------------
+ * Visible by default; JS only hides what is still below the fold. Hiding
+ * first would leave content permanently invisible wherever the observer
+ * never fires — no JS, a crawler, a screenshot tool.
+ */
+
+.reveal {
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.reveal[data-visible="false"] {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .reveal[data-visible="false"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Hero copy ---------------------------------------------------------------
+ * Everything a recruiter needs in five seconds, above the fold.
+ */
+
+.hero__availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--hero-ink);
+  background: var(--chip);
+  border: 1px solid var(--hero-edge);
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem;
+  margin-bottom: 1.5rem;
+  /* A stadium shape only reads as a badge on one line. Short enough to hold
+     even at 320px. */
+  white-space: nowrap;
+}
+
+.hero__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.18);
+}
+
+.hero__eyebrow {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  color: var(--hero-ink);
+}
+
+.hero__positioning {
+  margin-top: 1.25rem;
+  max-width: 34rem;
+  font-size: clamp(0.9375rem, 1.3vw, 1.0625rem);
+  line-height: 1.55;
+  color: var(--hero-ink-2);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: 1.5rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.hero__cta--solid {
+  background: var(--hero-ink);
+  color: var(--hero-solid-ink);
+}
+
+.hero__cta--solid:hover { background: var(--hero-solid-hover); }
+
+.hero__cta--ghost {
+  border: 1px solid var(--hero-edge);
+  color: var(--hero-ink);
+  background: var(--chip);
+}
+
+.hero__cta--ghost:hover { border-color: var(--hero-ink); }
+
+.hero__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.hero__stat-label {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hero-ink-3);
+}
+
+.hero__stat-value {
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--hero-ink);
+  margin-top: 0.1rem;
+}
+
+/* Brand row: the fastest credibility on the page, so it sits directly
+   under the hero rather than buried in a card. */
+
+.brands {
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding: 1.5rem var(--gutter);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem 1.75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.brands__name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+/* Desktop nav: four sections is few enough to just show. */
+
+.site-nav {
+  display: none;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+@media (min-width: 56rem) {
+  .site-nav { display: flex; }
+  .menu-toggle { display: none; }
+}
+
+.site-nav a {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 0.4rem 0.6rem;
+  border-radius: 999px;
+  background: var(--chip);
+  transition: background-color 0.25s ease;
+}
+
+.site-nav a:hover { background: var(--chip-hover); }
+
+/* Case study --------------------------------------------------------------- */
+
+.case {
+  max-width: var(--shell-read);
+  margin-inline: auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gutter);
+}
+
+.case__back {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  transition: color 0.25s ease;
+}
+
+.case__back:hover { color: var(--accent); }
+
+.case__title {
+  margin-top: 1.5rem;
+  font-size: var(--step-2);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.case__premise {
+  margin-top: 0.9rem;
+  font-size: var(--step-1);
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+/* Replaces the hero image. Same information density, none of the stock. */
+.case__bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-top: 2rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: var(--step--2);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.case__bar strong {
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.case__section {
+  margin-top: 2.5rem;
+  display: grid;
+  gap: 0.75rem 2rem;
+}
+
+@media (min-width: 48rem) {
+  .case__section { grid-template-columns: var(--label-col) minmax(0, 1fr); }
+}
+
+.case__section p {
+  color: var(--ink-2);
+}
+
+.case__section h2 {
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+}
+
+.work__more {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: var(--step--2);
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* The blurbs are the best copy on the page and used to sit at 14px grey under
+   a pile of pills. They lead now; the pills are the footnote. */
+.stack__evidence {
+  margin-top: 0.25rem;
+  font-size: var(--step--1);
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 46rem;
+}
+
+.stack__group .tags {
+  margin-top: 0.6rem;
+}
+
+/* Near-black brand marks invert on the dark ground. Both flagged marks are
+   monochrome, so this is a colour swap rather than a distortion. */
+:root[data-theme="dark"] .tag img[data-dark-mark] {
+  filter: invert(1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .tag img[data-dark-mark] {
+    filter: invert(1);
+  }
+}
+
+/* Fixed control cluster ----------------------------------------------------
+ * The nav links, the theme toggle and the hamburger were three independently
+ * fixed elements each carrying its own offset, which meant the toggle's
+ * position depended on the rendered width of the nav. One flex row instead —
+ * nothing has to guess where its neighbour ends.
+ */
+
+.site-controls {
+  position: fixed;
+  top: clamp(1rem, 2.2vw, 1.75rem);
+  left: 0;
+  right: 0;
+  z-index: 90;
+
+  /* Same spine as every section, so the controls end exactly where the content
+     ends. Pinning to the viewport edge instead put them ~340px outside the
+     content's right margin at 1920 — the one element on the page not obeying
+     the grid. */
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+
+  /* The row now spans the full content width, so it would otherwise swallow
+     clicks meant for the hero beneath it. Only the controls themselves take
+     pointer events. */
+  pointer-events: none;
+}
+
+.site-controls > * {
+  pointer-events: auto;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: var(--chip);
+  color: var(--accent);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--chip-hover);
+}
+
