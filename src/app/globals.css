@@ -352,6 +352,29 @@ body {
   }
 }
 
+/* Equal-height cards, in the grid and in the carousel alike.
+ *
+ * The li stretches to its row (grid) or track (flex), but Reveal's wrapper sits
+ * between the li and the card as a plain block at content height — so the
+ * card's `height: 100%` was resolving against an auto-height parent and
+ * collapsing to its own content. Short cards left a gap under them where the
+ * row had already reserved space. These three rules carry the height through. */
+.work__grid > li {
+  display: flex;
+  min-width: 0;
+}
+
+.work__grid > li > .reveal {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.work__grid > li > .reveal > .work__card {
+  flex: 1;
+  min-width: 0;
+}
+
 /* Mobile carousel ---------------------------------------------------------
  * The track is a scroll-snap container, so swiping is the browser's own
  * scrolling — real momentum, no touch handlers. The arrows only move that same
