@@ -50,15 +50,11 @@ gtag('js', new Date());`.trim();
       {/* Must execute before gtag.js. Inline, so it runs during parse. */}
       <script dangerouslySetInnerHTML={{ __html: bootstrap }} />
 
-      {/* lazyOnload, not afterInteractive: gtag.js is ~163kB and was evaluating
-          while React hydrated, which Lighthouse measured as the largest single
-          contributor to Total Blocking Time. Analytics has no claim on the main
-          thread ahead of the page itself, so it waits for idle. */}
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${id}`}
-        strategy="lazyOnload"
+        strategy="afterInteractive"
       />
-      <Script id="ga-config" strategy="lazyOnload">
+      <Script id="ga-config" strategy="afterInteractive">
         {`gtag('config', '${id}');`}
       </Script>
     </>
