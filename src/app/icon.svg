@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Amit Vishwakarma">
+  <style>
+    /* The site's two accent tokens. #2c35c6 is dark enough to disappear against
+       a dark browser chrome, so the dark value takes over there — same swap the
+       page itself makes. */
+    rect { fill: #2c35c6; }
+    @media (prefers-color-scheme: dark) {
+      rect { fill: #7c86ff; }
+    }
+  </style>
+  <rect x="1" y="1" width="30" height="30" rx="7.5" />
+</svg>
