@@ -30,6 +30,11 @@ export const site = {
   phone: "+917999715006",
   location: "Bengaluru, India — remote, US/EU overlap",
   resume: "/amit-vishwakarma-cv.pdf",
+  /**
+   * GA4 measurement ID. Public by design — it ships in the client HTML of every
+   * site that uses it — so it lives here rather than in an env var.
+   */
+  gaMeasurementId: "G-B2LZ4JLJBR",
   socials: {
     github: "https://github.com/AvTe",
     linkedin: "https://www.linkedin.com/in/amit-vishwakarma-b46380193/",

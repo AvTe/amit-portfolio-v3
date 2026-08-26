@@ -3,6 +3,7 @@ import { dmSans, mono } from "@/lib/fonts";
 import { buildPersonJsonLd, site } from "@/lib/site";
 import { SiteMenu } from "@/components/site-menu";
 import { SiteFooter } from "@/components/site-footer";
+import { Analytics } from "@/components/analytics";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -69,6 +70,14 @@ export default function RootLayout({
         <SiteMenu />
         <main id="main">{children}</main>
         <SiteFooter />
+        {/* Production only. A Vercel preview build also runs with NODE_ENV
+            "production", so previews would otherwise report as real traffic
+            and quietly corrupt the numbers. */}
+        {process.env.NODE_ENV === "production" &&
+        process.env.VERCEL_ENV !== "preview" ? (
+          <Analytics />
+        ) : null}
+
         {/* Plain script so the structured data is present in the server HTML. */}
         <script
           type="application/ld+json"
