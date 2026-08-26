@@ -25,6 +25,19 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
 
+  experimental: {
+    /**
+     * Ship CSS as a <style> tag in the head instead of a <link>.
+     *
+     * Lighthouse measured the stylesheet as the only render-blocking request,
+     * costing 150ms before anything could paint — with LCP at 4.4s that is the
+     * cheapest part to remove. The documented trade-off is that returning
+     * visitors lose a cached stylesheet, which is the right side to give up on
+     * a portfolio: almost every visit is someone's first.
+     */
+    inlineCss: true,
+  },
+
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

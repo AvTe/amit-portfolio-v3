@@ -78,7 +78,10 @@ export function WorkSection() {
                       alt=""
                       width={22}
                       height={22}
-                      unoptimized
+                      // SVG cannot be optimised and would need
+                      // dangerouslyAllowSVG; the PNGs go through the optimiser
+                      // and come back as resized WebP.
+                      unoptimized={project.iconSrc.endsWith(".svg")}
                       aria-hidden="true"
                     />
                   ) : (

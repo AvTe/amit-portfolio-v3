@@ -44,7 +44,7 @@
   --hero-bg: #fbfcfe;
   --hero-ink: #2c35c6;
   --hero-ink-2: #3a43b8;
-  --hero-ink-3: rgba(44, 53, 198, 0.6);
+  --hero-ink-3: rgba(44, 53, 198, 0.85); /* 5.2:1 / 4.8:1 across the gradient */
   --hero-edge: rgba(44, 53, 198, 0.25);
   --hero-solid-ink: #ffffff;
   --hero-solid-hover: #1f2799;
@@ -125,7 +125,7 @@
     --hero-bg: #0a0b0f;
     --hero-ink: #e4e7ff; /* 16.1:1 on the gradient's dark end, 11.7:1 mid */
     --hero-ink-2: #b3b9ee; /* 10.4:1 */
-    --hero-ink-3: rgba(228, 231, 255, 0.55);
+    --hero-ink-3: rgba(228, 231, 255, 0.7); /* 7.6:1 / 6.5:1 */
     --hero-edge: rgba(228, 231, 255, 0.22);
     --hero-solid-ink: #0f1130;
     --hero-solid-hover: #ffffff;
@@ -169,7 +169,7 @@
   --hero-bg: #0a0b0f;
   --hero-ink: #e4e7ff; /* 16.1:1 on the gradient's dark end, 11.7:1 mid */
   --hero-ink-2: #b3b9ee; /* 10.4:1 */
-  --hero-ink-3: rgba(228, 231, 255, 0.55);
+  --hero-ink-3: rgba(228, 231, 255, 0.7); /* 7.6:1 / 6.5:1 */
   --hero-edge: rgba(228, 231, 255, 0.22);
   --hero-solid-ink: #0f1130;
   --hero-solid-hover: #ffffff;
@@ -1328,7 +1328,7 @@ body {
 
 .hero__stat-label {
   font-family: var(--font-code), ui-monospace, monospace;
-  font-size: 0.5625rem;
+  font-size: 0.625rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--hero-ink-3);
