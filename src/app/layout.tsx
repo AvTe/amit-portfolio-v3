@@ -4,6 +4,7 @@ import { buildPersonJsonLd, site } from "@/lib/site";
 import { SiteMenu } from "@/components/site-menu";
 import { SiteFooter } from "@/components/site-footer";
 import { Analytics } from "@/components/analytics";
+import { ConsentBanner } from "@/components/consent-banner";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -75,7 +76,10 @@ export default function RootLayout({
             and quietly corrupt the numbers. */}
         {process.env.NODE_ENV === "production" &&
         process.env.VERCEL_ENV !== "preview" ? (
-          <Analytics />
+          <>
+            <Analytics />
+            <ConsentBanner />
+          </>
         ) : null}
 
         {/* Plain script so the structured data is present in the server HTML. */}
