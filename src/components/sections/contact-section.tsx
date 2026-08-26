@@ -23,8 +23,14 @@ export function ContactSection() {
         <a href={site.socials.github} target="_blank" rel="noreferrer">
           GitHub
         </a>
+        <a href={site.socials.instagram} target="_blank" rel="noreferrer">
+          Instagram
+        </a>
         <a href={site.resume} download>
           Download CV
+        </a>
+        <a href={site.socials.whatsapp} target="_blank" rel="noreferrer">
+          WhatsApp
         </a>
         <a href={`tel:${site.phone}`}>{site.phone}</a>
       </div>

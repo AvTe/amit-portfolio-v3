@@ -32,7 +32,10 @@ export const site = {
   resume: "/amit-vishwakarma-cv.pdf",
   socials: {
     github: "https://github.com/AvTe",
-    linkedin: "https://www.linkedin.com/in/amit-vishwakarma-av7999/",
+    linkedin: "https://www.linkedin.com/in/amit-vishwakarma-b46380193/",
+    instagram: "https://www.instagram.com/amitvishwakarm_a/",
+    /** Same number as `phone`, in the digits-only form wa.me requires. */
+    whatsapp: "https://wa.me/917999715006",
   },
   keywords: [
     "Amit Vishwakarma",
@@ -69,6 +72,10 @@ export function buildPersonJsonLd() {
     jobTitle: site.role,
     description: site.description,
     knowsAbout: site.keywords,
-    sameAs: [site.socials.github, site.socials.linkedin],
+    sameAs: [
+      site.socials.github,
+      site.socials.linkedin,
+      site.socials.instagram,
+    ],
   } satisfies Record<string, unknown>;
 }
