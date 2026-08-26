@@ -663,6 +663,35 @@ body {
   text-underline-offset: 3px;
 }
 
+/* On a phone the index and the signal cannot share a line: the index wraps
+   mid-phrase and orphans the year under a right-floated signal. Stacked, each
+   gets a whole line and neither breaks. */
+@media (max-width: 30rem) {
+  .work__top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .work__signal {
+    text-align: left;
+  }
+
+  .work__index {
+    letter-spacing: 0.08em;
+  }
+
+  /* Reclaims ~16px of line width on a 360px screen, which is where the mono
+     meta row was running out of room in the first place. */
+  .work__card {
+    padding: 1rem 1rem 0.95rem;
+  }
+
+  .work__foot {
+    gap: 0.5rem 0.75rem;
+  }
+}
+
 /* Tags -------------------------------------------------------------------- */
 
 .tags {
