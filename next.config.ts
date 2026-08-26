@@ -28,6 +28,23 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+
+  async redirects() {
+    return [
+      /**
+       * One canonical host. Both apex and www served 200 independently, which
+       * means two URLs for every page. The canonical tag already pointed at the
+       * apex so search would have consolidated eventually, but a 301 settles it
+       * outright and saves the round trip.
+       */
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.amitspace.cloud" }],
+        destination: "https://amitspace.cloud/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

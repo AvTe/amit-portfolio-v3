@@ -17,14 +17,14 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 72,
-          background: "#fbfbf9",
+          background: "#ffffff",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ display: "flex", fontSize: 22, letterSpacing: 6, color: "#7c7c77" }}>
+          <div style={{ display: "flex", fontSize: 21, letterSpacing: 4, color: "#6e7178", whiteSpace: "nowrap" }}>
             {`${site.role} · ${site.tagline}`.toUpperCase()}
           </div>
-          <div style={{ display: "flex", width: 120, height: 4, background: "#ea580c" }} />
+          <div style={{ display: "flex", width: 120, height: 4, background: "#2c35c6" }} />
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 26 }}>
@@ -34,19 +34,20 @@ export default function OpengraphImage() {
               fontSize: 96,
               fontWeight: 600,
               letterSpacing: -4,
-              color: "#101010",
+              color: "#101114",
               lineHeight: 1,
             }}
           >
             {site.name}
           </div>
-          <div style={{ display: "flex", fontSize: 30, color: "#5a5a57", maxWidth: 880, lineHeight: 1.35 }}>
+          <div style={{ display: "flex", fontSize: 30, color: "#55575e", maxWidth: 880, lineHeight: 1.35 }}>
             Full-stack, front to storefront — MERN platforms, Shopify and headless
             commerce, shipped for brands across the US, Canada, and Europe.
           </div>
         </div>
 
-        {/* Flat echo of the massing model. */}
+        {/* Abstract bar field. Tinted with the site accent, not a second
+            palette — this image is the first thing a shared link shows. */}
         <div style={{ display: "flex", alignItems: "flex-end", gap: 10 }}>
           {DOMAINS.flatMap((domain, column) =>
             Array.from({ length: 4 }).map((_, row) => (
@@ -56,7 +57,7 @@ export default function OpengraphImage() {
                   display: "flex",
                   width: 34,
                   height: 26 + ((column * 4 + row) % 5) * 17,
-                  background: (column * 4 + row) % 7 === 0 ? "#ea580c" : "#e2e2dc",
+                  background: (column * 4 + row) % 7 === 0 ? "#2c35c6" : "#e0e1e6",
                 }}
               />
             )),
