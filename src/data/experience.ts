@@ -7,38 +7,45 @@ export interface Role {
 
 export const EXPERIENCE: Role[] = [
   {
-    title: "Full-Stack Developer",
-    organisation: "Moshi Moshi, The Communication Company",
-    period: "Jun 2025 — Present",
+    title: "Shopify Full-Stack Developer",
+    organisation: "TipTop Things Limited",
+    period: "Sep 2026 — Present",
     description:
-      "Shipping full-stack features across React/Next.js and Node.js/Express with MongoDB — schema to production deploy. Shopify storefronts on Admin + Storefront APIs with webhook-driven CRM/ERP sync, and frontend performance work that cut page load by roughly a third on live client sites.",
+      "Shopify storefronts and custom apps end to end on Liquid, React, TypeScript, Node.js, and the Admin and Storefront GraphQL APIs. Custom theme sections, Theme App Extensions, and app backends with webhooks and OAuth, plus integrations with external services and Core Web Vitals work.",
   },
   {
-    title: "Freelance Full-Stack Developer",
+    title: "Shopify Full-Stack Developer",
+    organisation: "Moshi Moshi, The Communication Company",
+    period: "Jun 2025 — Jun 2026",
+    description:
+      "Custom Shopify sections, Theme App Extensions, and app backends in Node.js, React, and Next.js for enterprise DTC brands, extended through the Storefront and Admin GraphQL APIs, metafields, and metaobjects. BigCommerce storefront work on cross-platform projects, and Core Web Vitals work that cut page load by roughly 30–40% on several client sites.",
+  },
+  {
+    title: "Freelance Shopify Developer",
     organisation: "Independent — direct clients & agencies",
     period: "Feb 2025 — Jun 2025 · Oct 2022 — Jun 2023",
     description:
-      "MERN and Shopify delivery for repeat clients in the US and Europe: custom theme work, headless storefronts on Next.js + Storefront API, and Express/MongoDB backends. Complete lifecycle from scoping to handoff, with open-source extensions shipped between engagements.",
+      "Complete project lifecycle for repeat clients in the US and Europe, from scoping to handoff. Custom Shopify themes on Liquid and the Storefront GraphQL API, BigCommerce storefront builds, and migrations onto Shopify from other platforms.",
   },
   {
-    title: "Frontend / Full-Stack Developer",
+    title: "Frontend Developer",
     organisation: "Stellar8 Labs",
     period: "Mar 2024 — Feb 2025",
     description:
-      "Full-stack features with React/Next.js and Node.js APIs, including JWT and session auth. Built reusable component libraries used across product areas, ran WCAG audits and cross-browser QA, and refactored legacy components into modular architecture.",
+      "Responsive, accessible UI for eCommerce platforms, integrated with backend systems over REST and GraphQL APIs, with attention to component structure and design-system consistency. Performance optimisation, accessibility testing, and cross-browser debugging.",
   },
   {
-    title: "Web Developer / Website Designer",
+    title: "Website Designer",
     organisation: "GrayCyan",
     period: "Jun 2023 — Feb 2024",
     description:
-      "WordPress block themes and responsive marketing sites from UI/UX wireframes, working directly with the Canadian design team across time zones. BEM + SCSS architecture, pixel-perfect across breakpoints.",
+      "High-performance WordPress block themes and custom plugins in PHP and ACF, built from UI/UX wireframes. Scalable BEM + SCSS architecture, pixel-perfect across devices.",
   },
   {
     title: "Web Developer",
     organisation: "Dime In Time Media LLC",
     period: "Sep 2021 — Oct 2022",
     description:
-      "Responsive, conversion-focused sites for US clients on JavaScript, WordPress, and WooCommerce — checkout customisations, product templates, and performance improvements on delivered projects.",
+      "Responsive, conversion-focused websites for US clients, and WooCommerce solutions in PHP and WordPress, including custom theme and plugin work and performance improvements.",
   },
 ];

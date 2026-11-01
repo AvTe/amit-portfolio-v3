@@ -13,7 +13,7 @@ import { site } from "@/lib/site";
  *
  * Bump this when the copy changes, not when the code does.
  */
-const CONTENT_UPDATED = new Date("2026-08-26");
+const CONTENT_UPDATED = new Date("2026-11-01");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const caseStudies = PROJECTS.filter((project) => project.caseStudy).map(

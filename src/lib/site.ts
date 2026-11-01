@@ -37,7 +37,7 @@ export const site = {
   gaMeasurementId: "G-B2LZ4JLJBR",
   socials: {
     github: "https://github.com/AvTe",
-    linkedin: "https://www.linkedin.com/in/amit-vishwakarma-b46380193/",
+    linkedin: "https://www.linkedin.com/in/amit-vishwakarma-av7999/",
     instagram: "https://www.instagram.com/amitvishwakarm_a/",
     /** Same number as `phone`, in the digits-only form wa.me requires. */
     whatsapp: "https://wa.me/917999715006",
